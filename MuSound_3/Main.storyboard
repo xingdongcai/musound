@@ -158,14 +158,23 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n7T-t9-eJ0">
-                                <rect key="frame" x="102" y="388" width="156" height="47"/>
+                                <rect key="frame" x="102" y="385" width="156" height="54"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="35"/>
-                                <state key="normal" title="Save">
+                                <state key="normal" title="Post">
                                     <color key="titleColor" red="0.0" green="0.56078431370000004" blue="0.58431372550000005" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="saveToFirebase:" destination="h2z-nQ-766" eventType="touchUpInside" id="zev-Xm-Bih"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SMJ-Fz-rYF">
+                                <rect key="frame" x="161" y="331" width="56" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="26"/>
+                                <state key="normal" title="Save"/>
+                                <connections>
+                                    <action selector="saveToLocal:" destination="h2z-nQ-766" eventType="touchUpInside" id="Q9b-Td-EHq"/>
                                 </connections>
                             </button>
                         </subviews>

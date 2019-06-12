@@ -12,8 +12,10 @@
 		68CE9393FB5E375E3B7032EE /* Pods_MuSound_3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08969787DB9D3F8A7034236F /* Pods_MuSound_3.framework */; };
 		846D9FB822AA8AB500E2506C /* LocalPostsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846D9FB722AA8AB500E2506C /* LocalPostsCollectionViewCell.swift */; };
 		846D9FC322AA8E2200E2506C /* MainCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846D9FC222AA8E2200E2506C /* MainCollectionViewCell.swift */; };
+		848F63FA22B10103008B5281 /* PostMetaData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848F63F822B10103008B5281 /* PostMetaData+CoreDataClass.swift */; };
+		848F63FB22B10103008B5281 /* PostMetaData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848F63F922B10103008B5281 /* PostMetaData+CoreDataProperties.swift */; };
 		84D6D6B2229AC75900C59905 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6D6B1229AC75900C59905 /* AppDelegate.swift */; };
-		84D6D6BA229AC75900C59905 /* MuSound_3.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D6D6B8229AC75900C59905 /* MuSound_3.xcdatamodeld */; };
+		84D6D6BA229AC75900C59905 /* PostMetaData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D6D6B8229AC75900C59905 /* PostMetaData.xcdatamodeld */; };
 		84D6D6BC229AC75A00C59905 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84D6D6BB229AC75A00C59905 /* Assets.xcassets */; };
 		84D6D6BF229AC75A00C59905 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84D6D6BD229AC75A00C59905 /* LaunchScreen.storyboard */; };
 		84D6D6CA229AC75A00C59905 /* MuSound_3Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6D6C9229AC75A00C59905 /* MuSound_3Tests.swift */; };
@@ -58,9 +60,11 @@
 		5DAB3FA4458CF6DDAF61A6B3 /* Pods-MuSound_3UITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MuSound_3UITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MuSound_3UITests/Pods-MuSound_3UITests.debug.xcconfig"; sourceTree = "<group>"; };
 		846D9FB722AA8AB500E2506C /* LocalPostsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPostsCollectionViewCell.swift; sourceTree = "<group>"; };
 		846D9FC222AA8E2200E2506C /* MainCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainCollectionViewCell.swift; sourceTree = "<group>"; };
+		848F63F822B10103008B5281 /* PostMetaData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PostMetaData+CoreDataClass.swift"; sourceTree = "<group>"; };
+		848F63F922B10103008B5281 /* PostMetaData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PostMetaData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		84D6D6AE229AC75900C59905 /* MuSound_3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MuSound_3.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84D6D6B1229AC75900C59905 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		84D6D6B9229AC75900C59905 /* MuSound_3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MuSound_3.xcdatamodel; sourceTree = "<group>"; };
+		84D6D6B9229AC75900C59905 /* PostMetaData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PostMetaData.xcdatamodel; sourceTree = "<group>"; };
 		84D6D6BB229AC75A00C59905 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		84D6D6BE229AC75A00C59905 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		84D6D6C0229AC75A00C59905 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -164,6 +168,16 @@
 			path = UserProfile;
 			sourceTree = "<group>";
 		};
+		848F63F722B100D9008B5281 /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				848F63F822B10103008B5281 /* PostMetaData+CoreDataClass.swift */,
+				848F63F922B10103008B5281 /* PostMetaData+CoreDataProperties.swift */,
+				84D6D6B8229AC75900C59905 /* PostMetaData.xcdatamodeld */,
+			);
+			path = Database;
+			sourceTree = "<group>";
+		};
 		84D6D6A5229AC75900C59905 = {
 			isa = PBXGroup;
 			children = (
@@ -189,6 +203,7 @@
 		84D6D6B0229AC75900C59905 /* MuSound_3 */ = {
 			isa = PBXGroup;
 			children = (
+				848F63F722B100D9008B5281 /* Database */,
 				846D9FB922AA8ABE00E2506C /* UserAuthentication */,
 				846D9FBA22AA8AE700E2506C /* MainPostView */,
 				846D9FBE22AA8B4C00E2506C /* LocalPosts */,
@@ -200,7 +215,6 @@
 				84D6D6BD229AC75A00C59905 /* LaunchScreen.storyboard */,
 				84DE586E229C1BE30046AD06 /* GoogleService-Info.plist */,
 				84D6D6C0229AC75A00C59905 /* Info.plist */,
-				84D6D6B8229AC75900C59905 /* MuSound_3.xcdatamodeld */,
 			);
 			path = MuSound_3;
 			sourceTree = "<group>";
@@ -462,9 +476,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				84F54219229AD38E00FEFD21 /* ForthViewController.swift in Sources */,
-				84D6D6BA229AC75900C59905 /* MuSound_3.xcdatamodeld in Sources */,
+				84D6D6BA229AC75900C59905 /* PostMetaData.xcdatamodeld in Sources */,
+				848F63FB22B10103008B5281 /* PostMetaData+CoreDataProperties.swift in Sources */,
 				84F54218229AD38E00FEFD21 /* RegisterViewController.swift in Sources */,
 				84F5421D229AD38E00FEFD21 /* ProfileCollectionViewCell.swift in Sources */,
+				848F63FA22B10103008B5281 /* PostMetaData+CoreDataClass.swift in Sources */,
 				84F5421E229AD38E00FEFD21 /* StartViewController.swift in Sources */,
 				84F54217229AD38E00FEFD21 /* EventsViewController.swift in Sources */,
 				84F54221229AD38E00FEFD21 /* ScrollViewController.swift in Sources */,
@@ -807,13 +823,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		84D6D6B8229AC75900C59905 /* MuSound_3.xcdatamodeld */ = {
+		84D6D6B8229AC75900C59905 /* PostMetaData.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				84D6D6B9229AC75900C59905 /* MuSound_3.xcdatamodel */,
+				84D6D6B9229AC75900C59905 /* PostMetaData.xcdatamodel */,
 			);
-			currentVersion = 84D6D6B9229AC75900C59905 /* MuSound_3.xcdatamodel */;
-			path = MuSound_3.xcdatamodeld;
+			currentVersion = 84D6D6B9229AC75900C59905 /* PostMetaData.xcdatamodel */;
+			path = PostMetaData.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

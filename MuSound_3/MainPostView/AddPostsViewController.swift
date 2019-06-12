@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FirebaseFirestore
 import AVFoundation
+import CoreData
 
 
 class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioRecorderDelegate,AVAudioPlayerDelegate{
@@ -27,6 +28,8 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
     var storageReference = Storage.storage()
     var usersCollectionReference = Firestore.firestore().collection("users")
     var postsCollectionReference = Firestore.firestore().collection("posts")
+    
+    var managedObjectContext: NSManagedObjectContext?
     
     var userName:String!
     var imageURL:String!
@@ -135,6 +138,41 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
         navigationController?.popViewController(animated: true)
     }
     
+    @IBAction func saveToLocal(_ sender: Any) {
+        guard let postDescription = postDescTextField.text else {
+            displayErrorMessage("Please enter a post description")
+            return
+        }
+        let userID = Auth.auth().currentUser!.uid
+        let audioFilename = getDocumentsDirectory().appendingPathComponent(fileName)
+        let date = UInt(Date().timeIntervalSince1970)
+
+        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+        let url = NSURL(fileURLWithPath: path)
+        
+        if let pathComponent = url.appendingPathComponent("\(date)") {
+            //let filePath = pathComponent.path
+            let fileManager = FileManager.default
+            do{
+                try fileManager.copyItem(at: audioFilename, to: pathComponent)
+            }catch{
+                print("Cannot copy item")
+            }
+            
+            
+            let newLocalPost = NSEntityDescription.insertNewObject(forEntityName: "PostMetaData", into: managedObjectContext!) as! PostMetaData
+            newLocalPost.filename = "\(date)"
+            newLocalPost.postDescription = postDescription
+            newLocalPost.userID = userID
+            do {
+                try self.managedObjectContext?.save()
+                displayMessage("Audio has been saved!", "Success!")
+            } catch {
+                displayMessage("Could not save to database", "Error")
+            }
+        }
+    
+    }
     
     
 
@@ -209,6 +247,12 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
             self.userName = (document!.data()!["userName"] as! String)
             self.imageURL = (document!.data()!["imageURL"] as! String)
         }
+    }
+    
+    func displayMessage(_ message: String,_ title: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
     }
 }
 
