@@ -15,7 +15,7 @@
 		848F63FA22B10103008B5281 /* PostMetaData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848F63F822B10103008B5281 /* PostMetaData+CoreDataClass.swift */; };
 		848F63FB22B10103008B5281 /* PostMetaData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848F63F922B10103008B5281 /* PostMetaData+CoreDataProperties.swift */; };
 		84D6D6B2229AC75900C59905 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6D6B1229AC75900C59905 /* AppDelegate.swift */; };
-		84D6D6BA229AC75900C59905 /* PostMetaData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D6D6B8229AC75900C59905 /* PostMetaData.xcdatamodeld */; };
+		84D6D6BA229AC75900C59905 /* PostModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D6D6B8229AC75900C59905 /* PostModel.xcdatamodeld */; };
 		84D6D6BC229AC75A00C59905 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84D6D6BB229AC75A00C59905 /* Assets.xcassets */; };
 		84D6D6BF229AC75A00C59905 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84D6D6BD229AC75A00C59905 /* LaunchScreen.storyboard */; };
 		84D6D6CA229AC75A00C59905 /* MuSound_3Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6D6C9229AC75A00C59905 /* MuSound_3Tests.swift */; };
@@ -173,7 +173,7 @@
 			children = (
 				848F63F822B10103008B5281 /* PostMetaData+CoreDataClass.swift */,
 				848F63F922B10103008B5281 /* PostMetaData+CoreDataProperties.swift */,
-				84D6D6B8229AC75900C59905 /* PostMetaData.xcdatamodeld */,
+				84D6D6B8229AC75900C59905 /* PostModel.xcdatamodeld */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -203,11 +203,11 @@
 		84D6D6B0229AC75900C59905 /* MuSound_3 */ = {
 			isa = PBXGroup;
 			children = (
+				84D6D6B1229AC75900C59905 /* AppDelegate.swift */,
 				848F63F722B100D9008B5281 /* Database */,
 				846D9FB922AA8ABE00E2506C /* UserAuthentication */,
 				846D9FBA22AA8AE700E2506C /* MainPostView */,
 				846D9FBE22AA8B4C00E2506C /* LocalPosts */,
-				84D6D6B1229AC75900C59905 /* AppDelegate.swift */,
 				846D9FC122AA8CD100E2506C /* UserProfile */,
 				84F5420B229AD38D00FEFD21 /* EventsViewController.swift */,
 				84F54213229AD38E00FEFD21 /* Main.storyboard */,
@@ -476,7 +476,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				84F54219229AD38E00FEFD21 /* ForthViewController.swift in Sources */,
-				84D6D6BA229AC75900C59905 /* PostMetaData.xcdatamodeld in Sources */,
+				84D6D6BA229AC75900C59905 /* PostModel.xcdatamodeld in Sources */,
 				848F63FB22B10103008B5281 /* PostMetaData+CoreDataProperties.swift in Sources */,
 				84F54218229AD38E00FEFD21 /* RegisterViewController.swift in Sources */,
 				84F5421D229AD38E00FEFD21 /* ProfileCollectionViewCell.swift in Sources */,
@@ -823,13 +823,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		84D6D6B8229AC75900C59905 /* PostMetaData.xcdatamodeld */ = {
+		84D6D6B8229AC75900C59905 /* PostModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				84D6D6B9229AC75900C59905 /* PostMetaData.xcdatamodel */,
 			);
 			currentVersion = 84D6D6B9229AC75900C59905 /* PostMetaData.xcdatamodel */;
-			path = PostMetaData.xcdatamodeld;
+			path = PostModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

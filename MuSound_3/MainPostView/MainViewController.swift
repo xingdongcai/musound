@@ -31,6 +31,7 @@ class MainViewController: UIViewController,UICollectionViewDataSource,UICollecti
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionView.dataSource = self
         
         let lpgr = UILongPressGestureRecognizer(target: self, action: #selector(MainViewController.handleLongPress(_:)))
         lpgr.minimumPressDuration = 1
@@ -42,6 +43,7 @@ class MainViewController: UIViewController,UICollectionViewDataSource,UICollecti
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        collectionView.reloadData()
         
         db.collection("posts").getDocuments() { (querySnapshot, err) in
             if let err = err {

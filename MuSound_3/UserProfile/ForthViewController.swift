@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import AVFoundation
+import FirebaseFirestore
 
 class FourthViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     @IBOutlet weak var collectionView: UICollectionView!

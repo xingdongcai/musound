@@ -18,7 +18,7 @@ extension PostMetaData {
     }
 
     @NSManaged public var filename: String?
-    @NSManaged public var userID: String?
     @NSManaged public var postDescription: String?
+    @NSManaged public var userID: String?
 
 }

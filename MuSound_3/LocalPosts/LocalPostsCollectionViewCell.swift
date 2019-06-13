@@ -10,4 +10,8 @@ import UIKit
 
 class LocalPostsCollectionViewCell: UICollectionViewCell {
     
+    @IBOutlet weak var playBTN: UIButton!
+    @IBOutlet weak var postDescription: UILabel!
+    @IBOutlet weak var postDate: UILabel!
+    
 }

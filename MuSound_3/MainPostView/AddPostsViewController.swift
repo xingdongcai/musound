@@ -64,6 +64,9 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
             // failed to record!
         }
         
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        managedObjectContext = appDelegate?.persistantContainer?.viewContext
+        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -118,7 +121,7 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
         let userID = Auth.auth().currentUser!.uid
         let audioRef = storageReference.reference().child("\(userID)/\(date)")
         let metadata = StorageMetadata()
-        metadata.contentType = "audio/m4a"
+        metadata.contentType = "audio/x-m4a"
         
         audioRef.putFile(from: audioFilename, metadata: nil) { metadata, error in
             if error != nil{
@@ -161,6 +164,7 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
             
             
             let newLocalPost = NSEntityDescription.insertNewObject(forEntityName: "PostMetaData", into: managedObjectContext!) as! PostMetaData
+            
             newLocalPost.filename = "\(date)"
             newLocalPost.postDescription = postDescription
             newLocalPost.userID = userID
@@ -171,6 +175,9 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
                 displayMessage("Could not save to database", "Error")
             }
         }
+        
+        navigationController?.popViewController(animated: true)
+
     
     }
     
