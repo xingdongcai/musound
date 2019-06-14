@@ -16,11 +16,21 @@ target 'MuSound_3' do
     inherit! :search_paths
     # Pods for testing
   end
+  
+  pod 'Firebase/Core'
+  pod 'Firebase/Storage'
+  pod 'Firebase/Firestore'
+  pod 'Firebase/Auth'
+  pod 'MessageKit'
+  post_install do |installer|
+      installer.pods_project.targets.each do |target|
+          if target.name == 'MessageKit'
+              target.build_configurations.each do |config|
+                  config.build_settings['SWIFT_VERSION'] = '4.0'
+              end
+          end
+      end
+  end
 
 end
 
-pod 'Firebase/Core'
-pod 'Firebase/Analytics'
-pod 'Firebase/Storage'
-pod 'Firebase/Firestore'
-pod 'Firebase/Auth'

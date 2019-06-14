@@ -15,5 +15,5 @@ class MainCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var postDate: UILabel!
     @IBOutlet weak var postDescription: UILabel!
     @IBOutlet weak var playBTN: UIButton!
-    
+    @IBOutlet weak var stopBTN: UIButton!
 }

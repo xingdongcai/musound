@@ -13,4 +13,5 @@ class ProfileCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var playBTN: UIButton!
     @IBOutlet weak var postDate: UILabel!
     
+    @IBOutlet weak var stopBTN: UIButton!
 }

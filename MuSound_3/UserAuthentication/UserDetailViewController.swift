@@ -14,11 +14,6 @@ class UserDetailViewController: UIViewController, UIImagePickerControllerDelegat
     @IBOutlet weak var userNameTextField: UITextField!
     @IBOutlet weak var imageView: UIImageView!
     
-    @IBOutlet weak var cameraButton: UIButton!
-    @IBOutlet weak var galleryButton: UIButton!
-    @IBOutlet weak var registerButton: UIButton!
-    
-    
     
     
     var storageReference = Storage.storage()
@@ -28,25 +23,35 @@ class UserDetailViewController: UIViewController, UIImagePickerControllerDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         userNameTextField.delegate = self
-        cameraButton.layer.cornerRadius = 8
-        galleryButton.layer.cornerRadius = 8
-        registerButton.layer.cornerRadius = 8
         
-        
-        
-        let myImage: UIImage = UIImage(named:"boy")!
-        imageView.image = myImage
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
+        //Set default image, if user didn't select own image, then use this image
+        if let myImage: UIImage = UIImage(named:"boy"){
+            imageView.image = myImage
+        }
     }
     
     
+    //Source: https://stackoverflow.com/questions/29887869/uiactionsheet-ios-swift
+    //Show action sheet for user to set profile image,
+    @IBAction func showAlert(_ sender: Any) {
+        let alert = UIAlertController(title: "Set your profile picture", message: nil, preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "Camera", style: .default , handler:{ (UIAlertAction)in
+            self.pictureFromCamera()
+        }))
+        alert.addAction(UIAlertAction(title: "Album", style: .default , handler:{ (UIAlertAction)in
+            self.pictureFromAlbum()
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler:{ (UIAlertAction)in
+        }))
+        
+        self.present(alert, animated: true, completion: {
+        })
+    }
     
-    
-    @IBAction func photoFromCamera(_ sender: Any) {
+    func pictureFromCamera(){
         let imagePicker: UIImagePickerController = UIImagePickerController()
         if UIImagePickerController.isSourceTypeAvailable(.camera){
             imagePicker.sourceType = .camera
@@ -59,41 +64,27 @@ class UserDetailViewController: UIViewController, UIImagePickerControllerDelegat
         present(imagePicker, animated: true, completion: nil)
     }
     
-    @IBAction func photoFromGallery(_ sender: Any) {
+    func pictureFromAlbum(){
         let imagePicker: UIImagePickerController = UIImagePickerController()
-        
         imagePicker.sourceType = .savedPhotosAlbum
         imagePicker.allowsEditing = true
         imagePicker.delegate = self
         present(imagePicker, animated: true, completion: nil)
     }
     
-    
     @IBAction func registerAccount(_ sender: Any) {
         guard let userName = userNameTextField.text else {
             displayErrorMessage("Please enter a name")
             return
         }
+        //save user name and profile image to firebase
         self.userCollectionReference.document("\(userID)").setData(["userName":"\(userName)"], merge: true)
         savePhotoToFirebase()
         
         self.performSegue(withIdentifier: "registerFinishSegue", sender: nil)
         
     }
-    
-    
-    
-    
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
@@ -107,14 +98,18 @@ class UserDetailViewController: UIViewController, UIImagePickerControllerDelegat
     }
     
     
+    
     func savePhotoToFirebase(){
         
         let image = imageView.image
         let userID = Auth.auth().currentUser!.uid
+        
+        //initiate image data
         var data = Data()
         data = (image?.jpegData(compressionQuality: 0.2))!
         
-        let imageRef = storageReference.reference().child("\(userID)/\(userID)")
+        //set  userID as user image file under UserID folder in Firebase Storage
+        let imageRef = storageReference.reference().child("\(self.userID)/\(self.userID)")
         let metadata = StorageMetadata()
         metadata.contentType = "image/jpg"
         imageRef.putData(data,metadata:metadata){(meta,error) in
@@ -125,20 +120,12 @@ class UserDetailViewController: UIViewController, UIImagePickerControllerDelegat
                         print("Download URL not found")
                         return
                     }
+                    
+                    //save image url to firestore
                     self.userCollectionReference.document("\(userID)").setData(["imageURL":"\(downloadURL)"], merge: true)
-                    Firestore.firestore().collection("posts")
                 }
             }
         }
-        
-        //        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
-        //        let url = NSURL(fileURLWithPath: path)
-        //
-        //        if let pathComponent = url.appendingPathComponent("\(userID)") {
-        //            let filePath = pathComponent.path
-        //            let fileManager = FileManager.default
-        //            fileManager.createFile(atPath: filePath, contents: data, attributes: nil)
-        //        }
     }
     
     func displayErrorMessage(_ errorMessage: String) {
@@ -157,5 +144,5 @@ class UserDetailViewController: UIViewController, UIImagePickerControllerDelegat
 
 
 
-/* Reference: Lab 9 - offline gallery application
+/* Source: Lab 9 - offline gallery application
  */

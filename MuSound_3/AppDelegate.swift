@@ -26,7 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 fatalError("Failed to load Core Data stack: \(error)")
             }
         }
-        
         FirebaseApp.configure()
         return true
     }

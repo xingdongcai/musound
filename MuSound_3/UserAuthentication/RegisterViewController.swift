@@ -20,41 +20,41 @@ class RegisterViewController: UIViewController,UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        nextButton.layer.cornerRadius = 8
         emailTextField.delegate = self
         passwordTextField.delegate = self
         password2TextField.delegate = self
     }
     
     @IBAction func registerAccount(_ sender: Any) {
-        guard let password = passwordTextField.text else {
+        guard let password = passwordTextField.text,let password2 = password2TextField.text else {
             displayErrorMessage("Please enter a password")
             return
         }
-        guard let password2 = password2TextField.text else {
-            displayErrorMessage("Please enter a password")
-            return
-        }
+//        guard let password2 = password2TextField.text else {
+//            displayErrorMessage("Please enter a password")
+//            return
+//        }
         guard let email = emailTextField.text else {
             displayErrorMessage("Please enter an email address")
             return
         }
+        
         if password != password2{
             displayErrorMessage("Please check password")
             return
         }
+        
+        //Creat account in Firebase by using email
         Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
             if error != nil {
                 self.displayErrorMessage(error!.localizedDescription)
             }else{
-                self.performSegue(withIdentifier: "toProfileSegue", sender: nil)
+                self.performSegue(withIdentifier: "toUserDetailSegue", sender: nil)
             }
-            
         }
     }
     
-    
+    //If user click"Already have an account" button, go back to Login view controller
     @IBAction func goBackToLogin(_ sender: Any) {
         self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
     }

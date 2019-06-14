@@ -15,16 +15,24 @@ import CoreData
 
 class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioRecorderDelegate,AVAudioPlayerDelegate{
     @IBOutlet weak var postDescTextField: UITextField!
-    @IBOutlet weak var saveTestBTN: UIButton!
-    
-    
+    @IBOutlet weak var postBTN: UIButton!
+    @IBOutlet weak var saveBTN: UIButton!
     @IBOutlet weak var recordBTN: UIButton!
     @IBOutlet weak var playBTN: UIButton!
     
     var soundRecorder: AVAudioRecorder!
     var soundPlayer: AVAudioPlayer!
     var recordingSession: AVAudioSession!
+    
+    let iconPlay :UIImage = UIImage(named: "playIcon")!
+    let iconStop :UIImage = UIImage(named: "stopIcon")!
+    let iconRecord :UIImage = UIImage(named:"recordIcon")!
+    let iconStopRecord :UIImage = UIImage(named:"stopRecordIcon")!
+    
+    //set default audio file name
     var fileName :String = "audioFile.m4a"
+    
+    //Firebase reference
     var storageReference = Storage.storage()
     var usersCollectionReference = Firestore.firestore().collection("users")
     var postsCollectionReference = Firestore.firestore().collection("posts")
@@ -33,16 +41,15 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
     
     var userName:String!
     var imageURL:String!
-    
-    
-    var ref: DocumentReference? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
         postDescTextField.delegate = self
+
+        postBTN.isEnabled = false
+        saveBTN.isEnabled = false
         
-        saveTestBTN.isEnabled = false
-        
+        //fetch user profile, preparing for posting
         fetchUserProfile()
         
         recordingSession = AVAudioSession.sharedInstance()
@@ -66,41 +73,38 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
         
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         managedObjectContext = appDelegate?.persistantContainer?.viewContext
-        
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-  
+    
+    //record audio: action depends on button image
     @IBAction func recordAction(_ sender: Any) {
-        if recordBTN.titleLabel?.text == "Record" {
+        if recordBTN.currentImage!.isEqual(iconRecord) {
             soundRecorder.record()
-            recordBTN.setTitle("Stop", for: .normal)
+            recordBTN.setImage(iconStopRecord, for: .normal)
             playBTN.isEnabled = false
         } else {
             soundRecorder.stop()
-            recordBTN.setTitle("Record", for: .normal)
+            recordBTN.setImage(iconRecord, for: .normal)
             playBTN.isEnabled = false
-            saveTestBTN.isEnabled = true
+            postBTN.isEnabled = true
+            saveBTN.isEnabled = true
         }
-        
     }
-    
+    //play audio: action depends on button image
     @IBAction func playAction(_ sender: Any) {
-        if playBTN.titleLabel?.text == "Play" {
-            playBTN.setTitle("Stop", for: .normal)
+        if playBTN.currentImage!.isEqual(iconPlay) {
+            playBTN.setImage(iconStop, for: .normal)
             recordBTN.isEnabled = false
             setupPlayer()
             soundPlayer.play()
+            
         } else {
             soundPlayer.stop()
-            playBTN.setTitle("Play", for: .normal)
+            playBTN.setImage(iconPlay, for: .normal)
             recordBTN.isEnabled = false
         }
     }
-    
+    //post to firebase
     @IBAction func saveToFirebase(_ sender: Any) {
         guard let postDescription = postDescTextField.text else {
             displayErrorMessage("Please enter a post description")
@@ -137,15 +141,15 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
                 }
             }
         }
-        
-        navigationController?.popViewController(animated: true)
+        displayMessage("Audio has been posted!", "Success!")
     }
-    
+    //save to local storage by using core data to store audio file reference
     @IBAction func saveToLocal(_ sender: Any) {
         guard let postDescription = postDescTextField.text else {
             displayErrorMessage("Please enter a post description")
             return
         }
+        
         let userID = Auth.auth().currentUser!.uid
         let audioFilename = getDocumentsDirectory().appendingPathComponent(fileName)
         let date = UInt(Date().timeIntervalSince1970)
@@ -154,7 +158,6 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
         let url = NSURL(fileURLWithPath: path)
         
         if let pathComponent = url.appendingPathComponent("\(date)") {
-            //let filePath = pathComponent.path
             let fileManager = FileManager.default
             do{
                 try fileManager.copyItem(at: audioFilename, to: pathComponent)
@@ -171,27 +174,14 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
             do {
                 try self.managedObjectContext?.save()
                 displayMessage("Audio has been saved!", "Success!")
+                navigationController?.popViewController(animated: true)
             } catch {
-                displayMessage("Could not save to database", "Error")
+                displayErrorMessage("Could not save to database,Error")
             }
         }
         
-        navigationController?.popViewController(animated: true)
-
-    
     }
     
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
     
     func getDocumentsDirectory() -> URL {
@@ -199,6 +189,7 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
         return paths[0]
     }
     
+    //initialising recorder, preparing to record
     func setupRecorder() {
         let audioFilename = getDocumentsDirectory().appendingPathComponent(fileName)
         let recordSetting = [ AVFormatIDKey : kAudioFormatAppleLossless,
@@ -206,7 +197,6 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
                               AVEncoderBitRateKey : 320000,
                               AVNumberOfChannelsKey : 2,
                               AVSampleRateKey : 44100.2] as [String : Any]
-        
         do {
             soundRecorder = try AVAudioRecorder(url: audioFilename, settings: recordSetting )
             soundRecorder.delegate = self
@@ -216,6 +206,7 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
         }
     }
     
+    //initialising player, preparing to play
     func setupPlayer() {
         let audioFilename = getDocumentsDirectory().appendingPathComponent(fileName)
         do {
@@ -234,7 +225,7 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         recordBTN.isEnabled = true
-        playBTN.setTitle("Play", for: .normal)
+        playBTN.setImage(iconPlay, for: .normal)
     }
     
     
@@ -258,14 +249,15 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
     
     func displayMessage(_ message: String,_ title: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
+        let action = UIAlertAction(title:"Dismiss",style:.default){(action) in
+            self.navigationController?.popViewController(animated: true)
+        }
+        alertController.addAction(action)
         self.present(alertController, animated: true, completion: nil)
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
 }
-
-
-
-
-/* default user image
-https://www.flaticon.com/free-icon/boy_145867
-*/

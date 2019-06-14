@@ -18,8 +18,10 @@ class MainViewController: UIViewController,UICollectionViewDataSource,UICollecti
     
     let db = Firestore.firestore()
     var storageReference = Storage.storage()
-    let userImagesRef = Firestore.firestore().collection("users").document("\(Auth.auth().currentUser!.uid)")
+    let userProfileRef = Firestore.firestore().collection("users").document("\(Auth.auth().currentUser!.uid)")
+    
     let userID = Auth.auth().currentUser!.uid
+    var usersCollectionReference = Firestore.firestore().collection("users")
     
     var postDescriptions = [String]()
     var userNames = [String]()
@@ -27,24 +29,25 @@ class MainViewController: UIViewController,UICollectionViewDataSource,UICollecti
     var audioURLs = [String]()
     var images = [UIImage]()
     var imageURLs = [String]()
-    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         collectionView.dataSource = self
-        
-        let lpgr = UILongPressGestureRecognizer(target: self, action: #selector(MainViewController.handleLongPress(_:)))
-        lpgr.minimumPressDuration = 1
-        lpgr.delaysTouchesBegan = true
-        lpgr.delegate = self
-        self.collectionView.addGestureRecognizer(lpgr)
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         collectionView.reloadData()
         
+        //get user name from firestore,then set display name in chat group room
+        userProfileRef.getDocument { (document, error) in
+            AppSettings.displayName = (document!.data()!["userName"] as! String)
+        }
+        
+        //query posts from firestore
         db.collection("posts").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
@@ -60,13 +63,12 @@ class MainViewController: UIViewController,UICollectionViewDataSource,UICollecti
                 self.collectionView.reloadData()
             }
         }
-        
-        
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        //remove all posts when user change view
         self.postDescriptions.removeAll()
         self.userNames.removeAll()
         self.imageURLs.removeAll()
@@ -85,9 +87,12 @@ class MainViewController: UIViewController,UICollectionViewDataSource,UICollecti
         cell.userName.text = userNames[indexPath.row]
         cell.postDate.text = postDates[indexPath.row]
         
+        //set up button function
+        //Source: https://stackoverflow.com/questions/41456441/how-to-add-uibutton-action-in-a-collection-view-cell
         cell.playBTN.tag = indexPath.row
-        
         cell.playBTN.addTarget(self, action: #selector(self.playTapped(_:)), for:UIControl.Event.touchUpInside)
+        cell.stopBTN.tag = indexPath.row
+        cell.stopBTN.addTarget(self, action: #selector(self.stopTapped(_:)), for:UIControl.Event.touchUpInside)
         
         //Get user profileimage from firebase
         //Source:Firebase documentation
@@ -95,12 +100,37 @@ class MainViewController: UIViewController,UICollectionViewDataSource,UICollecti
             if let error = error {
                 print(error.localizedDescription)
             } else {
-            
                 cell.userImage.image = UIImage(data: data!)
                 cell.userImage.layer.cornerRadius = 40
             }})
         
-        //
+        cellCustomView(cell: cell)
+        return cell
+        
+    }
+    
+    
+    //User tap the play button in specific post:set up audioplayer, streaming audio from storage
+    @objc func playTapped(_ sender: UIButton!){
+            let audioString = audioURLs[sender.tag]
+            let audioURL = URL(string: audioString)!
+        
+            audioPlayer = AVPlayer(url: audioURL)
+            
+            let quarterOfASec = CMTimeMake(value: 1, timescale: 4)
+            audioPlayer?.addPeriodicTimeObserver(forInterval: quarterOfASec, queue: DispatchQueue.main, using: { (time) in})
+            audioPlayer?.play()
+    }
+    
+    //pause current audio
+    @objc func stopTapped(_ sender: UIButton!){
+            audioPlayer?.pause()
+    }
+    
+  
+    // Custom CollectionView Cell
+    //Sourve: https://github.com/rileydnorris/cardLayoutSwift
+    func cellCustomView(cell:UICollectionViewCell){
         cell.contentView.layer.cornerRadius = 4.0
         cell.contentView.layer.borderWidth = 1.0
         cell.contentView.layer.borderColor = UIColor.clear.cgColor
@@ -112,65 +142,12 @@ class MainViewController: UIViewController,UICollectionViewDataSource,UICollecti
         cell.layer.shadowOpacity = 0.8
         cell.layer.masksToBounds = false
         cell.layer.shadowPath = UIBezierPath(roundedRect: cell.bounds, cornerRadius: cell.contentView.layer.cornerRadius).cgPath
-        
-        return cell
-        
     }
     
-    @objc func playTapped(_ sender: UIButton!){
-        
-        let audioString = audioURLs[sender.tag]
-        print("This is audioURL: \(audioURLs[sender.tag])")
-        print(sender.tag)
-        let audioURL = URL(string: audioString)!
-        audioPlayer = AVPlayer(url: audioURL)
-        
-        let quarterOfASec = CMTimeMake(value: 1, timescale: 4)
-        audioPlayer?.addPeriodicTimeObserver(forInterval: quarterOfASec, queue: DispatchQueue.main, using: { (time) in})
-        print("playAudio success")
-        audioPlayer?.play()
-    }
-    
-    @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
-        guard gestureRecognizer.state != .ended else { return }
-        
-        let point = gestureRecognizer.location(in: collectionView)
-        
-        if let indexPath = collectionView.indexPathForItem(at: point),
-            let cell = collectionView.cellForItem(at: indexPath) {
-            // do stuff with your cell, for example print the indexPath
-            print(indexPath.row)
-            
-            //show alert
-            let alert = UIAlertController(title: "Action", message: "after long press", preferredStyle: .alert)
-            
-            let action1 = UIAlertAction(title: "Delete?", style: .default) { (action) in
-                print("Delete action")
-            }
-            let action2 = UIAlertAction(title: "Post?", style: .default) { (action) in
-                print("Post to firebase action")
-            }
-            let action3 = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
-                print("Cencel action")
-            }
-            
-            action1.setValue(UIColor.red, forKey: "titleTextColor")
-            alert.addAction(action1)
-            alert.addAction(action2)
-            alert.addAction(action3)
-            present(alert, animated: true, completion: nil)
-            
-        } else {
-            print("Could not find index path")
-        }
-    }
-    
-    /*
-     UIButton Action Stuff
-        https://stackoverflow.com/questions/41456441/how-to-add-uibutton-action-in-a-collection-view-cell
-     Custom CollectionView Cell
-        https://github.com/rileydnorris/cardLayoutSwift
-     */
     
 }
+
+
+
+
 
