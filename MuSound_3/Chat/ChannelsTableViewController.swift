@@ -32,13 +32,6 @@ import FirebaseFirestore
 
 class ChannelsTableViewController: UITableViewController {
     
-    private let toolbarLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 15)
-        return label
-    }()
-    
     //initialize channel
     private var channels = [Channel]()
     private var channelListener: ListenerRegistration?

@@ -85,7 +85,7 @@ class AddPostsViewController: UIViewController, UITextFieldDelegate ,AVAudioReco
         } else {
             soundRecorder.stop()
             recordBTN.setImage(iconRecord, for: .normal)
-            playBTN.isEnabled = false
+            //playBTN.isEnabled = false
             postBTN.isEnabled = true
             saveBTN.isEnabled = true
         }
