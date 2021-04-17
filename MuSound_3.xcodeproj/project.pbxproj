@@ -148,8 +148,8 @@
 		846D9FB922AA8ABE00E2506C /* UserAuthentication */ = {
 			isa = PBXGroup;
 			children = (
+				848F63F922B10103008B5281 /* PostMetaData+CoreDataProperties.swift */,
 				84F54212229AD38E00FEFD21 /* LoginViewController.swift */,
-				84F5420C229AD38D00FEFD21 /* RegisterViewController.swift */,
 				84F5420A229AD38D00FEFD21 /* UserDetailViewController.swift */,
 			);
 			path = UserAuthentication;
@@ -187,7 +187,6 @@
 			isa = PBXGroup;
 			children = (
 				848F63F822B10103008B5281 /* PostMetaData+CoreDataClass.swift */,
-				848F63F922B10103008B5281 /* PostMetaData+CoreDataProperties.swift */,
 				84D6D6B8229AC75900C59905 /* PostModel.xcdatamodeld */,
 			);
 			path = Database;
@@ -259,6 +258,7 @@
 				846D9FBE22AA8B4C00E2506C /* LocalPost */,
 				846D9FC122AA8CD100E2506C /* UserProfile */,
 				84F54213229AD38E00FEFD21 /* Main.storyboard */,
+				84F5420C229AD38D00FEFD21 /* RegisterViewController.swift */,
 				84D6D6BB229AC75A00C59905 /* Assets.xcassets */,
 				84D6D6BD229AC75A00C59905 /* LaunchScreen.storyboard */,
 				84DE586E229C1BE30046AD06 /* GoogleService-Info.plist */,
